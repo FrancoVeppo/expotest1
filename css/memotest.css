@@ -1,5 +1,5 @@
 /* Importar Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display.swap');
 
 /* Estilos generales */
 body {
@@ -14,6 +14,7 @@ body {
     margin: 0;
     padding: 20px;
     box-sizing: border-box;
+    /* Las clases de dificultad se aplicarán aquí desde JS */
 }
 
 h1, h2 {
@@ -25,6 +26,13 @@ h1, h2 {
 /* Clase para ocultar/mostrar secciones */
 .is-hidden {
     display: none !important;
+}
+
+/* Contenedor principal del juego (para control de ancho) */
+#game-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* --- Estadísticas (Movimientos y Tiempo) --- */
@@ -39,7 +47,6 @@ h1, h2 {
     font-size: 1.2em;
     font-weight: 600;
     width: 100%;
-    max-width: 420px; /* Ancho del tablero medio */
     box-sizing: border-box;
 }
 #moves-counter, #timer {
@@ -54,11 +61,12 @@ h1, h2 {
     background-color: white;
     border-radius: 12px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    /* Se ajustará al contenido */
-    display: inline-block; 
+    width: 100%;
+    box-sizing: border-box;
+    display: block; 
 }
 
-/* El tablero (¡sin grid-template-columns fijo!) */
+/* El tablero */
 .game-board {
     display: grid;
     gap: 10px;
@@ -134,6 +142,7 @@ h1, h2 {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     width: 100%;
+    box-sizing: border-box;
 }
 #restart-btn:hover { background-color: #c7001e; }
 #restart-btn:active { transform: scale(0.98); }
@@ -222,8 +231,6 @@ h1, h2 {
 
 /* --- Estilos del Leaderboard --- */
 .leaderboard-container {
-    width: 100%;
-    max-width: 420px;
     background-color: rgba(255, 255, 255, 0.7);
     border-radius: 12px;
     padding: 10px 20px;
@@ -246,6 +253,26 @@ h1, h2 {
 #leaderboard-list li:last-child {
     border-bottom: none;
 }
+/* --- Control de Ancho por Dificultad (LA CORRECCIÓN DE ALINEACIÓN) --- */
+/* Esto usa la clase que JS pone en el <body> y en #game-wrapper */
+
+/* Ancho para Fácil (4 col) y Medio (4 col) -> Ancho total ~470px */
+.difficulty-easy#game-wrapper,
+.difficulty-medium#game-wrapper,
+.difficulty-easy .leaderboard-container,
+.difficulty-medium .leaderboard-container {
+    /* (100px * 4 cartas) + (10px * 3 gaps) + (20px * 2 padding) = 470px */
+    width: 470px;
+}
+
+/* Ancho para Difícil (6 col) -> Ancho total ~570px */
+.difficulty-hard#game-wrapper,
+.difficulty-hard .leaderboard-container {
+     /* (80px * 6 cartas) + (10px * 5 gaps) + (20px * 2 padding) = 570px */
+    width: 570px;
+}
+
+
 /* --- 📱 Estilos Responsivos para Móviles --- */
 /* Estas reglas se aplican solo si la pantalla mide 600px o menos */
 @media (max-width: 600px) {
