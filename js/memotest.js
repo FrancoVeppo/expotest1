@@ -82,9 +82,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         // --- FIN DE LA CORRECCIÓN ---
 
-        gameBoard.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
-        gameWrapper.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
-        document.body.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
+        // Limpiamos clases anteriores y añadimos la actual
+        const difficultyClasses = ['difficulty-easy', 'difficulty-medium', 'difficulty-hard'];
+        gameBoard.classList.remove(...difficultyClasses);
+        gameWrapper.classList.remove(...difficultyClasses);
+        document.body.classList.remove(...difficultyClasses);
 
         gameBoard.classList.add(settings.class);
         gameWrapper.classList.add(settings.class);
@@ -221,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadLeaderboard() {
         const scores = JSON.parse(localStorage.getItem('memotestLeaderboard')) || [];
+        // Ordena: 1. Dificultad (desc), 2. Tiempo (asc), 3. Movimientos (asc)
         scores.sort((a, b) => {
             const diffOrder = { hard: 3, medium: 2, easy: 1 };
             if (diffOrder[a.difficulty] !== diffOrder[b.difficulty]) {
@@ -248,11 +251,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 8. Inicialización y Event Listeners ---
-    // Ahora todo esto se ejecuta DESPUÉS de que el HTML cargó.
-    
     startGameBtn.addEventListener('click', startGame);
     restartBtn.addEventListener('click', resetToSetup);
-    modalRestartBtn.addEventListener('click', createBoard);
+    // Este botón (en el modal de victoria) reinicia el tablero con la MISMA dificultad
+    modalRestartBtn.addEventListener('click', createBoard); 
+    
     loadLeaderboard(); // Carga los puntajes al inicio
 
 }); // <-- FIN DEL "DOMContentLoaded" LISTENER
