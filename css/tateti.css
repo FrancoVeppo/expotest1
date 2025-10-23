@@ -1,0 +1,79 @@
+/* css/tateti.css */
+
+.board {
+    display: grid;
+    /* Crea una grilla de 3 columnas, cada una de 100px de ancho */
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 5px; /* Espacio entre las casillas */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 3rem; /* Tamaño de la 'X' y 'O' */
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.cell:hover {
+    background-color: #e0e0e0;
+}
+
+.status {
+    font-size: 1.2em;
+    margin-bottom: 15px;
+}
+
+#resetButton {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    background-color: #dc3545;
+    color: white;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+#resetButton:hover {
+    background-color: #c82333;
+}
+
+a {
+    text-decoration: none;
+    color: #007bff;
+    font-size: 1em;
+}
+
+/* css/tateti.css (añadir al final) */
+
+#game-mode-selection button {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#vsPlayer {
+    background-color: #007bff;
+    color: white;
+}
+#vsCPU {
+    background-color: #28a745;
+    color: white;
+}
+
+.hide {
+    display: none;
+}

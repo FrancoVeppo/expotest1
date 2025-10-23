@@ -1,0 +1,113 @@
+/* Estilos para el juego del Ahorcado */
+.game-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.hangman-box {
+    height: 280px;
+    width: 200px;
+}
+
+.hangman-svg line, .hangman-svg circle {
+    stroke: #333;
+    stroke-width: 4;
+    fill: none;
+    stroke-linecap: round;
+}
+
+.hangman-part {
+    /* Ocultamos las partes del cuerpo al inicio */
+    visibility: hidden;
+}
+
+.word-display {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    min-height: 50px;
+}
+
+.letter-box {
+    width: 40px;
+    height: 40px;
+    border-bottom: 3px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    gap: 5px;
+    width: 100%;
+    max-width: 600px;
+    margin-top: 20px;
+}
+
+.key {
+    padding: 10px;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.key:hover {
+    background-color: #ddd;
+}
+
+.key:disabled {
+    cursor: not-allowed;
+    background-color: #999;
+    color: #eee;
+}
+
+.key.correct {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+.key.wrong {
+    background-color: #dc3545; /* Rojo */
+    color: white;
+}
+
+.hide {
+    display: none;
+}
+
+#game-over-message {
+    text-align: center;
+    margin-top: 20px;
+}
+
+#message-text {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#play-again-btn {
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.back-link {
+    display: block;
+    margin-top: 20px;
+}

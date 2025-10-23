@@ -1,0 +1,198 @@
+/* ====== Estilos Generales ====== */
+body {
+    position: relative; /* 👈 Esto activa el contexto para el ::before */
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #b8fff1 0%, #c8f5ff 100%);
+    background-attachment: fixed;
+    color: #2d2d2d;
+    overflow-x: hidden; /* evita barras si la imagen se desborda */
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("../img/fondobody.png");
+    background-repeat: repeat;
+    background-size: 200px;
+    opacity: 1; /* podés subirlo si querés que se vea más */
+    z-index: -1;
+    pointer-events: none; /* evita que interfiera con clics */
+}
+
+header {
+    background-color: #6cc0b2; /* verde claro */
+    color: black;
+    padding: 25px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: sticky;
+}
+
+.header-content {
+    max-width: 1000px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px;
+}
+
+.titulo h1 {
+    margin: 0;
+    font-size: 2.3em;
+    letter-spacing: 1px;
+}
+
+.header-img {
+    width: 120px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.subtitulo {
+    text-align: center;
+    margin: 40px 0 10px;
+}
+
+.subtitulo h2 {
+    color: #2d2d2d;
+    font-size: 1.8em;
+    font-weight: 600;
+    margin: 0;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+main {
+    padding: 40px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    max-width: 1000px;
+    margin: auto;
+}
+
+/* ====== Tarjetas de Juegos ====== */
+.juego {
+    background-color:  white;
+    width: 250px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+
+.juego:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+.juego img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.juego h3 {
+    margin: 15px 0 5px;
+    color: #4ca2ae;
+}
+
+.juego p {
+    font-size: 0.9em;
+    margin: 0 15px 15px;
+    color: black;
+}
+
+.juego a {
+    display: inline-block;
+    margin-bottom: 20px;
+    background-color:  #4ca2ae;
+    color: white;
+    text-decoration: none;
+    padding: 10px 25px;
+    border-radius: 25px;
+    transition: background-color 0.3s;
+}
+
+.juego a:hover {
+    background-color: #68d3d6;
+}
+
+/* ====== Footer ====== */
+footer {
+    background-color: #6cc0b2;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+    position: sticky;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        padding: 0 15px;
+    }
+
+    .titulo h1 {
+        font-size: 1.8em;
+        text-align: center;
+    }
+
+    .header-img {
+        width: 100px;
+    }
+
+    main {
+        padding: 20px 10px;
+        gap: 15px;
+    }
+
+    .juego {
+        width: 90%; /* ocupa casi todo el ancho */
+    }
+
+    .juego img {
+        height: 180px;
+    }
+
+    .subtitulo h2 {
+        font-size: 1.5em;
+    }
+
+    .juego p {
+        font-size: 0.85em;
+    }
+
+    .juego a {
+        padding: 8px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .titulo h1 {
+        font-size: 1.5em;
+    }
+
+    .subtitulo h2 {
+        font-size: 1.3em;
+    }
+
+    .header-img {
+        width: 80px;
+    }
+
+    .juego img {
+        height: 150px;
+    }
+}
+
