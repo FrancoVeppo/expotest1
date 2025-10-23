@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego del Ahorcado</title>
+    <link rel="stylesheet" href="css/style.css"> <link rel="stylesheet" href="css/ahorcado.css"> </head>
+<body>
+    <div class="container">
+        <h2>Juego del Ahorcado</h2>
+        <div class="game-content">
+            <div class="hangman-box">
+                <svg height="250" width="200" class="hangman-svg">
+                    <line x1="60" y1="20" x2="140" y2="20" />
+                    <line x1="140" y1="20" x2="140" y2="50" />
+                    <line x1="60" y1="20" x2="60" y2="230" />
+                    <line x1="20" y1="230" x2="100" y2="230" />
+
+                    <circle cx="140" cy="70" r="20" class="hangman-part" /> <line x1="140" y1="90" x2="140" y2="150" class="hangman-part" /> <line x1="140" y1="120" x2="110" y2="100" class="hangman-part" /> <line x1="140" y1="120" x2="170" y2="100" class="hangman-part" /> <line x1="140" y1="150" x2="110" y2="180" class="hangman-part" /> <line x1="140" y1="150" x2="170" y2="180" class="hangman-part" /> </svg>
+            </div>
+            
+            <div id="word-display" class="word-display"></div>
+        </div>
+
+        <div id="keyboard" class="keyboard"></div>
+
+        <div id="game-over-message" class="hide">
+            <p id="message-text"></p>
+            <button id="play-again-btn">Jugar de nuevo</button>
+        </div>
+
+        <a href="index.html" class="back-link">Volver al inicio</a>
+    </div>
+
+    <script src="js/ahorcado.js"></script>
+</body>
+</html>

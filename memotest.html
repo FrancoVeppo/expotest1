@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memotest Pro 🏆</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display.swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/memotest.css">
+</head>
+<body>
+
+    <div id="setup-modal" class="modal-overlay is-visible">
+        <div class="modal-content setup-modal">
+            <h2>¡Bienvenido al Memotest!</h2>
+            <p>Ingresa tu nombre y elige la dificultad.</p>
+            
+            <input type="text" id="username-input" placeholder="Tu Nombre" maxlength="15">
+            
+            <div class="difficulty-selector">
+                <input type="radio" id="diff-easy" name="difficulty" value="easy" checked>
+                <label for="diff-easy">Fácil (8)</label>
+                
+                <input type="radio" id="diff-medium" name="difficulty" value="medium">
+                <label for="diff-medium">Medio (16)</label>
+                
+                <input type="radio" id="diff-hard" name="difficulty" value="hard">
+                <label for="diff-hard">Difícil (24)</label>
+            </div>
+            
+            <button id="start-game-btn">¡Jugar!</button>
+        </div>
+    </div>
+
+
+    <div id="game-wrapper" class="is-hidden">
+        <h1>Memotest <i class="fa-solid fa-brain" style="color: #ff69b4;"></i></h1>
+        
+        <div class="stats-container">
+            <p>Movimientos: <span id="moves-counter">0</span></p>
+            <p>Tiempo: <span id="timer">00:00</span></p>
+        </div>
+
+        <div class="game-container">
+            <div id="game-board" class="game-board">
+                </div>
+        </div>
+        
+        <button id="restart-btn">Cambiar Dificultad</button>
+    </div>
+    
+    <div class="leaderboard-container">
+        <h2>🏆 Mejores Puntajes</h2>
+        <ol id="leaderboard-list">
+            <li>No hay puntajes todavía...</li>
+        </ol>
+    </div>
+
+    <div id="win-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h2>¡Ganaste! 🥳</h2>
+            <p id="win-stats-text">¡Felicidades, encontraste todos los pares!</p>
+            <button id="modal-restart-btn">Jugar de Nuevo</button>
+        </div>
+    </div>
+
+    <script src="js/memotest.js"></script>
+</body>
+</html>

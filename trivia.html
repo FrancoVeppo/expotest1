@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trivia</title>
+  <link rel="stylesheet" href="/css/trivia.css">
+</head>
+<body>
+  <div id="pantalla-dificultad" class="pantalla">
+    <h1>Elige la dificultad</h1>
+    <input type="text" id="nombre-jugador" placeholder="Ingresa tu nombre">
+    <button id="facil">Fácil (5 preguntas)</button>
+    <button id="medio">Medio (10 preguntas)</button>
+    <button id="dificil">Difícil (20 preguntas)</button>
+    <button id="ver-ranking">Ver Ranking</button>
+  </div>
+
+  <div id="pantalla-juego" class="pantalla" style="display:none;">
+    <div id="temporizador">Tiempo: <span id="tiempo">60</span>s</div>
+    <button id="boton-volver-menu" class="boton-esquina">Volver al Menú</button>
+    
+    <h2 id="pregunta"></h2>
+    <div id="opciones"></div>
+  </div>
+
+  <div id="pantalla-final" class="pantalla" style="display:none;">
+    </div>
+
+  <div id="pantalla-ranking" class="pantalla" style="display:none;">
+    <h1>Ranking Histórico</h1>
+    <ul id="lista-ranking">
+      </ul>
+    <button onclick="mostrarDificultad()">Volver</button>
+  </div>
+
+  <script src="/js/preguntas.js"></script>
+  <script src="/js/script.js"></script>
+</body>
+</html>

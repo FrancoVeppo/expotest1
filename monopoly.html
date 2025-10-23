@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monopoly Argentino</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/monopoly.css">
+</head>
+<body>
+    <div id="startup-menu" class="modal-overlay visible">
+        <div class="modal setup-modal">
+            <h2>Configurar Partida</h2>
+
+            <div id="player-setups-container" class="setup-container">
+                </div>
+
+            <div class="setup-buttons">
+                <button id="add-player-btn" class="modal-btn">➕ Agregar Jugador</button>
+                <button id="remove-player-btn" class="modal-btn pass">➖ Eliminar Último Jugador</button>
+            </div>
+
+            <button id="start-game-btn" class="start-btn">¡Empezar a Jugar!</button>
+        </div>
+    </div>
+
+    <div class="main-container hidden">
+        <div id="board" class="board">
+            <div class="center-panel">
+                <div id="turn-indicator" class="turn-indicator"></div> <h1 class="game-title">MONOPOLY</h1>
+                <div id="player-info" class="player-info"></div>
+
+                <div id="game-message-panel" class="game-message-panel hidden">
+                    <div id="message-icon" class="message-icon"></div>
+                    <h3 id="message-title"></h3>
+                    <p id="message-text"></p>
+                    <div id="message-buttons" class="message-buttons"></div>
+                </div>
+
+                <div class="controls">
+                    <div class="dice-container">
+                        <div id="die-1" class="die"></div>
+                        <div id="die-2" class="die"></div>
+                    </div>
+                    <div id="dice-total" class="dice-total"></div>
+                    <button id="roll-dice-btn">🎲 Tirar Dados</button>
+                    <button id="manage-btn">⚙️ Gestionar</button>
+                </div>
+            </div>
+            </div>
+    </div>
+
+    <div id="manage-modal-overlay" class="modal-overlay">
+        <div class="modal manage-modal">
+            <h2 id="manage-modal-title">Gestionar Propiedades</h2>
+            <div id="manage-modal-content" class="manage-content">
+                </div>
+            <div class="modal-buttons">
+                <button id="manage-modal-close-btn" class="modal-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="trade-modal-overlay" class="modal-overlay">
+        <div class="modal trade-modal">
+            <h2 id="trade-modal-title">Iniciar Intercambio</h2>
+
+            <div id="trade-partner-selection" class="trade-partner-selection">
+                <p>¿Con quién quieres intercambiar?</p>
+                <div id="trade-partner-buttons" class="modal-buttons"></div>
+            </div>
+
+            <div id="trade-interface" class="trade-interface hidden">
+                <div id="initiator-offer" class="trade-offer">
+                    <h3 id="initiator-name">Tu Oferta</h3>
+                    <div class="trade-money">
+                        <label for="initiator-money">Dinero:</label>
+                        <input type="number" id="initiator-money" min="0" value="0">
+                    </div>
+                    <div id="initiator-properties" class="trade-properties"></div>
+                </div>
+
+                <div id="recipient-offer" class="trade-offer">
+                    <h3 id="recipient-name">Su Oferta</h3>
+                    <div class="trade-money">
+                        <label for="recipient-money">Dinero:</label>
+                        <input type="number" id="recipient-money" min="0" value="0">
+                    </div>
+                    <div id="recipient-properties" class="trade-properties"></div>
+                </div>
+            </div>
+
+            <div id="trade-modal-buttons" class="modal-buttons">
+                 </div>
+        </div>
+    </div>
+
+    <div id="property-card-overlay" class="modal-overlay">
+        <div id="property-card-modal" class="modal"> <div id="property-card-content">
+                </div>
+            <div class="modal-buttons">
+                <button id="property-card-close-btn" class="modal-btn">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/monopoly.js" charset="utf-8"></script>
+</body>
+</html>

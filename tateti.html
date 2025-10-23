@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ta-Te-Ti</title>
+    <link rel="stylesheet" href="css/style.css"> <link rel="stylesheet" href="css/tateti.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Ta-Te-Ti</h2>
+        
+        <div id="game-mode-selection">
+            <p>Elige tu oponente:</p>
+            <button id="vsPlayer">1v1</button>
+            <button id="vsCPU">Contra (IA)</button>
+        </div>
+
+        <div id="game-container" class="hide">
+            <div id="status" class="status"></div>
+            <div id="board" class="board">
+                <div class="cell" data-index="0"></div>
+                <div class="cell" data-index="1"></div>
+                <div class="cell" data-index="2"></div>
+                <div class="cell" data-index="3"></div>
+                <div class="cell" data-index="4"></div>
+                <div class="cell" data-index="5"></div>
+                <div class="cell" data-index="6"></div>
+                <div class="cell" data-index="7"></div>
+                <div class="cell" data-index="8"></div>
+            </div>
+            <button id="resetButton">Reiniciar Juego</button>
+            <a href="index.html">Volver al inicio</a>
+        </div>
+    </div>
+    <script src="js/tateti.js"></script>
+</body>
+</html>
