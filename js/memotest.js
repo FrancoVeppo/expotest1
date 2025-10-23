@@ -28,16 +28,12 @@ const ALL_ICONS = [
     'fa-solid fa-bugs', 'fa-solid fa-frog', 'fa-solid fa-horse', 'fa-solid fa-dove'
 ];
 
-// Configuración de niveles
-// Limpiamos clases de dificultad anteriores
-    gameBoard.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
-    gameWrapper.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
-    document.body.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard'); // Limpia el body
-
-    // Añadimos la clase actual a todos los elementos clave
-    gameBoard.classList.add(settings.class); 
-    gameWrapper.classList.add(settings.class);
-    document.body.classList.add(settings.class); // Añade al body (para el leaderboard)
+// Configuración de niveles (CORREGIDO)
+const DIFFICULTY_SETTINGS = {
+    easy: { pairs: 4, cols: 4, rows: 2, class: 'difficulty-easy' },  // 8 cartas
+    medium: { pairs: 8, cols: 4, rows: 4, class: 'difficulty-medium' }, // 16 cartas
+    hard: { pairs: 12, cols: 6, rows: 4, class: 'difficulty-hard' } // 24 cartas (CORREGIDO de 6 a 12)
+};
 
 // --- 3. Variables de Estado del Juego ---
 
@@ -67,12 +63,19 @@ function shuffle(array) {
 
 // Función para crear el tablero
 function createBoard() {
-    // AÑADE ESTA LÍNEA PARA OCULTAR EL MODAL
+    // CORRECCIÓN: Oculta el modal de victoria si está visible
     winModal.classList.remove('is-visible');
 
     // 1. Resetear el estado y el tablero
     gameBoard.innerHTML = '';
-    // ... (el resto de la función)
+    matchedPairs = 0;
+    moves = 0;
+    movesCounter.textContent = moves;
+    resetBoardState();
+    stopTimer();
+    timerDisplay.textContent = '00:00';
+    firstFlipDone = false;
+
     // 2. Obtener configuración de dificultad
     const settings = DIFFICULTY_SETTINGS[currentDifficulty];
     totalPairs = settings.pairs;
@@ -80,9 +83,15 @@ function createBoard() {
     // 3. Ajustar el CSS del tablero (GRID) y clases
     gameBoard.style.gridTemplateColumns = `repeat(${settings.cols}, 1fr)`;
     gameBoard.style.gridTemplateRows = `repeat(${settings.rows}, 1fr)`;
-    // Limpiamos clases de dificultad anteriores
+    
+    // CORRECCIÓN ALINEACIÓN: Limpia y aplica clases al body y wrapper
     gameBoard.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
-    gameBoard.classList.add(settings.class); // Añadimos la clase actual
+    gameWrapper.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
+    document.body.classList.remove('difficulty-easy', 'difficulty-medium', 'difficulty-hard');
+
+    gameBoard.classList.add(settings.class); 
+    gameWrapper.classList.add(settings.class);
+    document.body.classList.add(settings.class);
 
     // 4. Preparar las cartas
     const iconsForGame = ALL_ICONS.slice(0, totalPairs);
@@ -113,7 +122,6 @@ function flipCard() {
     if (this === firstCard) return;
 
     // --- Iniciar el Timer ---
-    // Solo en el primer clic de la partida
     if (!firstFlipDone) {
         startTimer();
         firstFlipDone = true;
@@ -154,12 +162,9 @@ function disableCards() {
         stopTimer();
         const finalTime = Math.floor((Date.now() - startTime) / 1000); // Tiempo en segundos
         
-        // Guardar el puntaje
         saveScore(currentPlayer, moves, finalTime, currentDifficulty);
-        // Actualizar la tabla de puntajes en el acto
         loadLeaderboard();
 
-        // Mostrar modal de victoria
         winStatsText.textContent = `¡Lo lograste en ${moves} movimientos y ${formatTime(finalTime)}!`;
         setTimeout(() => {
             winModal.classList.add('is-visible');
@@ -232,37 +237,26 @@ function formatTime(seconds) {
 // --- 7. Funciones del Leaderboard (localStorage) ---
 
 function saveScore(name, moves, time, difficulty) {
-    // 1. Obtener puntajes existentes (o un array vacío)
     const scores = JSON.parse(localStorage.getItem('memotestLeaderboard')) || [];
-    
-    // 2. Crear el nuevo puntaje
     const newScore = { name, moves, time, difficulty };
-
-    // 3. Añadir el nuevo puntaje
     scores.push(newScore);
-
-    // 4. Guardar en localStorage
     localStorage.setItem('memotestLeaderboard', JSON.stringify(scores));
 }
 
 function loadLeaderboard() {
     const scores = JSON.parse(localStorage.getItem('memotestLeaderboard')) || [];
 
-    // Ordenar: primero por dificultad (difícil > medio > fácil)
-    // Luego por tiempo (menos es mejor)
-    // Luego por movimientos (menos es mejor)
     scores.sort((a, b) => {
         const diffOrder = { hard: 3, medium: 2, easy: 1 };
         if (diffOrder[a.difficulty] !== diffOrder[b.difficulty]) {
-            return diffOrder[b.difficulty] - diffOrder[a.difficulty]; // Descendente
+            return diffOrder[b.difficulty] - diffOrder[a.difficulty];
         }
         if (a.time !== b.time) {
-            return a.time - b.time; // Ascendente
+            return a.time - b.time;
         }
-        return a.moves - b.moves; // Ascendente
+        return a.moves - b.moves;
     });
 
-    // Limpiar la lista actual
     leaderboardList.innerHTML = '';
 
     if (scores.length === 0) {
@@ -270,7 +264,6 @@ function loadLeaderboard() {
         return;
     }
 
-    // Mostrar solo los 10 mejores
     const top10 = scores.slice(0, 10);
 
     top10.forEach(score => {
