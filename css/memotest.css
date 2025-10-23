@@ -246,3 +246,78 @@ h1, h2 {
 #leaderboard-list li:last-child {
     border-bottom: none;
 }
+/* --- 📱 Estilos Responsivos para Móviles --- */
+/* Estas reglas se aplican solo si la pantalla mide 600px o menos */
+@media (max-width: 600px) {
+
+    /* 1. Ajustar el padding general del body */
+    body {
+        padding: 10px;
+    }
+
+    /* 2. Hacer que los contenedores principales sean flexibles */
+    /* Anulamos los anchos fijos de 470px y 570px */
+    .difficulty-easy#game-wrapper,
+    .difficulty-medium#game-wrapper,
+    .difficulty-hard#game-wrapper,
+    .difficulty-easy .leaderboard-container,
+    .difficulty-medium .leaderboard-container,
+    .difficulty-hard .leaderboard-container {
+        /* Usar 95% del ancho de la pantalla */
+        width: 95vw; 
+    }
+
+    /* 3. Reducir padding y gaps internos */
+    .game-container {
+        padding: 10px;
+    }
+    .game-board {
+        /* Reducimos el espacio entre cartas */
+        gap: 5px; 
+    }
+
+    /* 4. Hacer que las cartas sean flexibles y cuadradas */
+    /* Anulamos los width/height fijos de 100px y 80px */
+    .memory-card,
+    .difficulty-easy .memory-card,
+    .difficulty-medium .memory-card,
+    .difficulty-hard .memory-card {
+        width: auto;  /* Dejar que el grid (1fr) controle el ancho */
+        height: auto; /* Dejar que aspect-ratio controle el alto */
+        aspect-ratio: 1 / 1; /* Forzar a que sean cuadradas */
+    }
+
+    /* 5. Ajustar fuentes para que quepan en las cartas más chicas */
+    .card-face {
+        /* Usar 'em' para que la fuente sea relativa al contenedor */
+        font-size: 2.5em; 
+    }
+    .card-front {
+        font-size: 3em;
+        line-height: 1.2; /* Ajustar centrado vertical */
+    }
+    
+    /* 6. Reducir texto de los modales */
+    .modal-content {
+        padding: 20px 25px;
+    }
+    .modal-content h2 {
+        font-size: 1.5em;
+    }
+    .modal-content p {
+        font-size: 1em;
+    }
+    .difficulty-selector label {
+        padding: 8px 10px;
+        font-size: 0.9em;
+        margin: 0 3px;
+    }
+
+    /* 7. Reducir texto de la tabla de puntajes */
+    .leaderboard-container h2 {
+        font-size: 1.2em;
+    }
+    #leaderboard-list li {
+        font-size: 0.9em;
+    }
+}
