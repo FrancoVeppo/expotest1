@@ -4,16 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trivia</title>
-  <link rel="stylesheet" href="css/trivia.css">
+  <link rel="stylesheet" href="css/trivia.css"> 
 </head>
 <body>
+  
   <div id="pantalla-dificultad" class="pantalla">
-    <h1>Elige la dificultad</h1>
-    <input type="text" id="nombre-jugador" placeholder="Ingresa tu nombre">
-    <button id="facil">Fácil (5 preguntas)</button>
-    <button id="medio">Medio (10 preguntas)</button>
-    <button id="dificil">Difícil (20 preguntas)</button>
-    <button id="ver-ranking">Ver Ranking</button>
+      
+    <div class="inicio-main">
+      <h1>Elige la dificultad</h1>
+      <input type="text" id="nombre-jugador" placeholder="Ingresa tu nombre">
+      
+      <input type="text" id="documento-jugador" placeholder="Ingresa tu DNI (sin puntos)">
+      
+      <button id="facil">Fácil (5 preguntas)</button>
+      <button id="medio">Medio (10 preguntas)</button>
+      <button id="dificil">Difícil (20 preguntas)</button>
+      <button id="ver-ranking">Ver Ranking Completo</button>
+    </div>
+    
+    <div class="inicio-ranking">
+      <h2>Mejores Puntajes</h2>
+      <ul id="lista-ranking-inicio">
+        </ul>
+    </div>
   </div>
 
   <div id="pantalla-juego" class="pantalla" style="display:none;">
@@ -31,11 +44,10 @@
     <h1>Ranking Histórico</h1>
     <ul id="lista-ranking">
       </ul>
-    <button onclick="mostrarDificultad()">Volver</button>
+    <button id="boton-volver-ranking">Volver</button>
   </div>
 
   <script src="js/preguntas.js"></script>
   <script src="js/script.js"></script>
 </body>
-
 </html>
