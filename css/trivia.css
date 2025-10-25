@@ -8,6 +8,8 @@ body {
 
 .pantalla {
   padding: 50px 20px;
+  position: relative; 
+  min-height: 500px; 
 }
 
 button {
@@ -43,13 +45,27 @@ button:hover {
   font-size: 16px;
   width: 60%;
   max-width: 400px;
-  box-sizing: border-box; /* Importante para que el padding no desborde */
+  box-sizing: border-box; 
   border: 2px solid #ccc;
   border-radius: 10px;
   text-align: center;
 }
 
-/* Estilos para las listas de ranking */
+/* --- ESTE ES EL CAMBIO --- */
+#documento-jugador {
+  display: block;
+  margin: 20px auto;
+  padding: 15px;
+  font-size: 16px;
+  width: 60%;
+  max-width: 400px;
+  box-sizing: border-box; 
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Estilos para las listas de ranking (GENERALES) */
 #lista-ranking, #lista-ranking-final {
   list-style: none;
   padding: 0;
@@ -58,8 +74,8 @@ button:hover {
   text-align: left;
   border: 1px solid #ddd;
   border-radius: 10px;
-  max-height: 300px; /* Para que no sea muy larga */
-  overflow-y: auto; /* Scroll si hay muchos puntajes */
+  max-height: 300px; 
+  overflow-y: auto; 
 }
 
 #lista-ranking li, #lista-ranking-final li {
@@ -72,7 +88,7 @@ button:hover {
 #lista-ranking li:first-child, #lista-ranking-final li:first-child {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  font-weight: bold; /* Destacar al primero */
+  font-weight: bold; 
   background: #e0f0ff;
 }
 
@@ -83,15 +99,11 @@ button:hover {
 }
 
 
-/* --- ESTILOS AÑADIDOS --- */
-
-/* Posiciona la pantalla de juego de forma relativa */
+/* --- ESTILOS (Juego) --- */
 #pantalla-juego {
   position: relative;
-  padding-top: 80px; /* Más padding superior para dejar espacio */
+  padding-top: 80px;
 }
-
-/* Estilo para el temporizador */
 #temporizador {
   position: absolute;
   top: 20px;
@@ -100,19 +112,131 @@ button:hover {
   font-weight: bold;
   color: #333;
 }
-
-/* Estilo para el botón de volver */
 .boton-esquina {
   position: absolute;
   top: 15px;
   right: 15px;
   padding: 8px 12px;
   font-size: 14px;
-  background-color: #f39c12; /* Color naranja */
-  width: auto; /* Anula el ancho por defecto de los botones */
-  margin: 0; /* Anula el margen por defecto */
+  background-color: #f39c12;
+  width: auto; 
+  margin: 0; 
 }
-
 .boton-esquina:hover {
   background-color: #e67e22;
+}
+
+/* --- ESTILOS PARA RESPUESTAS --- */
+#opciones .correcta {
+  background-color: #2ecc71;
+  color: white;
+}
+#opciones .incorrecta {
+  background-color: #e74c3c;
+  color: white;
+}
+
+
+/* --- ESTILOS PANTALLA INICIO CON RANKING --- */
+.inicio-main {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.inicio-ranking {
+  position: absolute; 
+  top: 30px;         
+  right: 30px;       
+  bottom: 30px;      
+  width: 400px;      
+  
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  text-align: left; 
+  
+  display: flex;
+  flex-direction: column;
+}
+
+.inicio-ranking h2 {
+  margin-top: 0;
+  font-size: 20px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 10px;
+  flex-shrink: 0; 
+}
+
+#lista-ranking-inicio {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  flex-grow: 1;
+  min-height: 0; 
+  overflow-y: auto; 
+}
+
+#lista-ranking-inicio li {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+#lista-ranking-inicio strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+}
+#lista-ranking-inicio small {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-size: 14px;
+}
+
+.barra-progreso {
+  width: 100%;
+  background-color: #f0f0f0; 
+  border-radius: 5px;
+  overflow: hidden;
+  height: 22px;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.barra-progreso-fill {
+  height: 100%;
+  width: 0%; 
+  background-color: #2ecc71; 
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 22px; 
+  text-align: right;
+  padding-right: 5px;
+  box-sizing: border-box;
+  transition: width 0.5s ease; 
+}
+
+@media (max-width: 950px) {
+  .inicio-ranking {
+    position: static;
+    width: 90%;
+    max-width: 400px;
+    margin: 40px auto 0;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    display: block;
+    height: auto; 
+  }
+  
+  #lista-ranking-inicio {
+    max-height: 350px;
+    flex-grow: 0;
+  }
+
+  .inicio-main {
+    margin-left: auto;
+  }
 }
