@@ -6,7 +6,7 @@ let temporizador;
 let aciertos = 0;
 let errores = 0;
 let nombreJugadorActual = "";
-let dniActual = ""; // <--- Renombramos la variable
+let dniActual = ""; 
 
 // --- ¡¡¡IMPORTANTE!!! ---
 // Pega tu URL secreta (la que acabas de copiar) aquí abajo, entre las comillas.
@@ -36,48 +36,37 @@ function barajarArray(array) {
 }
 
 // --- FUNCIONES DEL JUEGO ---
-
-// (Esta es la función que verifica el DNI)
 function iniciarJuego(cantidad) {
   nombreJugadorActual = document.getElementById("nombre-jugador").value.trim();
-  dniActual = document.getElementById("documento-jugador").value.trim(); // <--- Captura el DNI
+  dniActual = document.getElementById("documento-jugador").value.trim();
   
-  // 1. Validación básica (campos vacíos)
   if (nombreJugadorActual === "" || dniActual === "") {
     alert("Por favor, ingresa tu nombre Y tu DNI.");
     return; 
   }
   
-  // 2. Deshabilitar botones para evitar doble clic
   const botonesDificultad = document.querySelectorAll("#pantalla-dificultad button");
   botonesDificultad.forEach(btn => btn.disabled = true);
   
   let h1 = document.querySelector("#pantalla-dificultad h1");
   h1.textContent = "Verificando DNI...";
 
-  // 3. Verificación en tiempo real con Google (envía el DNI como "codigo")
   fetch(GOOGLE_SCRIPT_URL + "?codigo=" + encodeURIComponent(dniActual))
     .then(response => response.json())
     .then(data => {
-      // 4. Re-habilitar botones y restaurar título
       botonesDificultad.forEach(btn => btn.disabled = false);
       h1.textContent = "Elige la dificultad";
 
-      // 5. Decidir si se juega o no
       if (data.status === "usado") {
         alert("Este DNI ya fue utilizado. Solo se permite un intento por persona.");
-      
       } else if (data.status === "no_usado") {
-        // --- CÓDIGO VÁLIDO ---
         preguntasSeleccionadas = barajarArray(preguntas).slice(0, cantidad);
-        
         document.getElementById("pantalla-dificultad").style.display = "none";
         document.getElementById("pantalla-juego").style.display = "block";
         indicePregunta = 0;
         aciertos = 0; 
         errores = 0;
         mostrarPregunta(indicePregunta);
-        
       } else {
         throw new Error(data.message || "Error desconocido al verificar el DNI.");
       }
@@ -91,7 +80,6 @@ function iniciarJuego(cantidad) {
 }
 
 function mostrarPregunta(indice) {
-  // (Esta función no cambia)
   if (indice >= preguntasSeleccionadas.length) {
     finalizarJuego();
     return;
@@ -120,7 +108,6 @@ function mostrarPregunta(indice) {
 }
 
 function seleccionarOpcion(opcion, boton = null) {
-  // (Esta función no cambia)
   clearInterval(temporizador);
   const correcta = preguntasSeleccionadas[indicePregunta].correcta;
   const botones = document.querySelectorAll("#opciones button");
@@ -136,8 +123,6 @@ function seleccionarOpcion(opcion, boton = null) {
     mostrarPregunta(indicePregunta);
   }, 1200);
 }
-
-// (Esta función envía el puntaje - POST)
 function finalizarJuego() {
   document.getElementById("pantalla-juego").style.display = "none";
   const pantallaFinal = document.getElementById("pantalla-final");
@@ -151,14 +136,14 @@ function finalizarJuego() {
     nombre: nombreJugadorActual,
     aciertos: aciertos,
     porcentaje: porcentaje,
-    codigo: dniActual // <--- Envía el DNI bajo el nombre "codigo"
+    codigo: dniActual
   };
 
+  // --- CORRECCIÓN CORS: Se quitó la línea de 'headers' ---
   fetch(GOOGLE_SCRIPT_URL, {
     method: 'POST',
     mode: 'cors', 
     cache: 'no-cache',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(datosDelJuego), 
   })
   .then(response => response.json())
@@ -194,12 +179,8 @@ function reiniciarJuego() {
   indicePregunta = 0;
   document.getElementById("pantalla-final").style.display = "none";
   document.getElementById("pantalla-dificultad").style.display = "block";
-  
-  // Limpia los campos
   document.getElementById("nombre-jugador").value = "";
   document.getElementById("documento-jugador").value = "";
-  
-  // Actualiza el ranking
   mostrarRankingInicio();
 }
 
@@ -212,29 +193,21 @@ function volverAlMenu() {
   mostrarRankingInicio();
 }
 
-
-// --- FUNCIONES DE NAVEGACIÓN (PIDEN DATOS A GOOGLE) ---
-
-// (Esta pide los datos para el ranking completo)
 function mostrarRanking() {
   document.getElementById("pantalla-dificultad").style.display = "none";
   document.getElementById("pantalla-ranking").style.display = "block";
-
   const listaRanking = document.getElementById("lista-ranking");
   listaRanking.innerHTML = "<li>Cargando ranking...</li>";
 
-  // Hacemos un GET a la misma URL
   fetch(GOOGLE_SCRIPT_URL)
     .then(response => response.json())
     .then(result => {
       if (result.status === 'success' && result.data.length > 0) {
-        var topPuntajes = result.data; // Ya viene filtrado
-        
+        var topPuntajes = result.data;
         listaRanking.innerHTML = topPuntajes.map(p => {
             let porcentaje = Math.round((p.aciertos / 20) * 100); 
             return `<li>${p.nombre}: ${p.aciertos} correctas - ${porcentaje}%</li>`;
           }).join('');
-          
       } else if (result.data.length === 0) {
         listaRanking.innerHTML = "<li>Aún no hay puntajes.</li>";
       } else {
@@ -253,21 +226,17 @@ function mostrarDificultad() {
   mostrarRankingInicio();
 }
 
-// (Esta pide los datos para el ranking de la página de inicio)
 function mostrarRankingInicio() {
   const listaRanking = document.getElementById("lista-ranking-inicio");
   listaRanking.innerHTML = "<li>Cargando ranking...</li>";
   
-  // Hacemos un GET a la misma URL
   fetch(GOOGLE_SCRIPT_URL)
     .then(response => response.json())
     .then(result => {
       if (result.status === 'success' && result.data.length > 0) {
-        var topPuntajes = result.data; // Ya viene el Top 5 filtrado
-        
+        var topPuntajes = result.data;
         listaRanking.innerHTML = topPuntajes.map(p => {
           let porcentaje = Math.round((p.aciertos / 20) * 100); 
-          
           return `
             <li>
               <strong>${p.nombre}</strong>
@@ -280,7 +249,6 @@ function mostrarRankingInicio() {
             </li>
           `;
         }).join('');
-        
       } else if (result.data.length === 0) {
         listaRanking.innerHTML = "<li>Aún no hay puntajes. ¡Sé el primero!</li>";
       } else {
