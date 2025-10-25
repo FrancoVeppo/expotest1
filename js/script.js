@@ -1,14 +1,16 @@
+// (VARIABLES GLOBALES)
 let preguntasSeleccionadas = [];
 let indicePregunta = 0;
 let tiempo = 60;
 let temporizador;
 let aciertos = 0;
 let errores = 0;
-
-// --- VARIABLES DE JUGADOR Y RANKING ---
 let nombreJugadorActual = "";
-// Carga los puntajes guardados o crea un array vacío
-let puntajes = JSON.parse(localStorage.getItem("rankingTrivia")) || [];
+let dniActual = ""; // <--- Renombramos la variable
+
+// --- ¡¡¡IMPORTANTE!!! ---
+// Pega tu URL secreta (la que acabas de copiar) aquí abajo, entre las comillas.
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxKpZxUhpwOFyyumBYhG8V5SABHU3NB3liBtdZjv5quuDRH6OcXjGx9WuZ9w37CwfnCfA/exec";
 
 
 // --- DIFICULTAD Y NAVEGACIÓN ---
@@ -17,63 +19,93 @@ document.getElementById("medio").addEventListener("click", () => iniciarJuego(10
 document.getElementById("dificil").addEventListener("click", () => iniciarJuego(20));
 document.getElementById("ver-ranking").addEventListener("click", mostrarRanking);
 document.getElementById("boton-volver-menu").addEventListener("click", volverAlMenu);
+document.getElementById("boton-volver-ranking").addEventListener("click", mostrarDificultad);
+
+// Al cargar la página, mostramos el ranking de Google
+document.addEventListener("DOMContentLoaded", mostrarRankingInicio);
 
 
-// --- ALGORITMO FISHER-YATES (Mejor aleatoriedad) ---
+// --- ALGORITMO FISHER-YATES ---
 function barajarArray(array) {
-  let arrayCopia = [...array]; // Copiar para no modificar el array original
+  let arrayCopia = [...array]; 
   for (let i = arrayCopia.length - 1; i > 0; i--) {
-    // Genera un índice aleatorio entre 0 e i
     const j = Math.floor(Math.random() * (i + 1));
-    // Intercambia los elementos
     [arrayCopia[i], arrayCopia[j]] = [arrayCopia[j], arrayCopia[i]];
   }
   return arrayCopia;
 }
 
 // --- FUNCIONES DEL JUEGO ---
-function iniciarJuego(cantidad) {
-  // Captura el nombre del jugador y quita espacios en blanco
-  nombreJugadorActual = document.getElementById("nombre-jugador").value.trim();
-  
-  // --- VALIDACIÓN AÑADIDA ---
-  if (nombreJugadorActual === "") {
-    alert("Por favor, ingresa un nombre para jugar.");
-    return; // Detiene la ejecución si no hay nombre
-  }
-  // --- FIN DE LA VALIDACIÓN ---
 
-  // Usa el nuevo algoritmo para barajar
-  preguntasSeleccionadas = barajarArray(preguntas).slice(0, cantidad);
+// (Esta es la función que verifica el DNI)
+function iniciarJuego(cantidad) {
+  nombreJugadorActual = document.getElementById("nombre-jugador").value.trim();
+  dniActual = document.getElementById("documento-jugador").value.trim(); // <--- Captura el DNI
   
-  document.getElementById("pantalla-dificultad").style.display = "none";
-  document.getElementById("pantalla-juego").style.display = "block";
-  indicePregunta = 0;
-  aciertos = 0; // Reinicia contadores para la nueva partida
-  errores = 0;
-  mostrarPregunta(indicePregunta);
+  // 1. Validación básica (campos vacíos)
+  if (nombreJugadorActual === "" || dniActual === "") {
+    alert("Por favor, ingresa tu nombre Y tu DNI.");
+    return; 
+  }
+  
+  // 2. Deshabilitar botones para evitar doble clic
+  const botonesDificultad = document.querySelectorAll("#pantalla-dificultad button");
+  botonesDificultad.forEach(btn => btn.disabled = true);
+  
+  let h1 = document.querySelector("#pantalla-dificultad h1");
+  h1.textContent = "Verificando DNI...";
+
+  // 3. Verificación en tiempo real con Google (envía el DNI como "codigo")
+  fetch(GOOGLE_SCRIPT_URL + "?codigo=" + encodeURIComponent(dniActual))
+    .then(response => response.json())
+    .then(data => {
+      // 4. Re-habilitar botones y restaurar título
+      botonesDificultad.forEach(btn => btn.disabled = false);
+      h1.textContent = "Elige la dificultad";
+
+      // 5. Decidir si se juega o no
+      if (data.status === "usado") {
+        alert("Este DNI ya fue utilizado. Solo se permite un intento por persona.");
+      
+      } else if (data.status === "no_usado") {
+        // --- CÓDIGO VÁLIDO ---
+        preguntasSeleccionadas = barajarArray(preguntas).slice(0, cantidad);
+        
+        document.getElementById("pantalla-dificultad").style.display = "none";
+        document.getElementById("pantalla-juego").style.display = "block";
+        indicePregunta = 0;
+        aciertos = 0; 
+        errores = 0;
+        mostrarPregunta(indicePregunta);
+        
+      } else {
+        throw new Error(data.message || "Error desconocido al verificar el DNI.");
+      }
+    })
+    .catch(error => {
+      console.error("Error al verificar DNI:", error);
+      alert("Error de red. No se pudo verificar tu DNI. Revisa la conexión e inténtalo de nuevo.");
+      botonesDificultad.forEach(btn => btn.disabled = false);
+      h1.textContent = "Elige la dificultad";
+    });
 }
 
 function mostrarPregunta(indice) {
+  // (Esta función no cambia)
   if (indice >= preguntasSeleccionadas.length) {
     finalizarJuego();
     return;
   }
-
   const preguntaActual = preguntasSeleccionadas[indice];
   document.getElementById("pregunta").textContent = preguntaActual.pregunta;
-
   const opcionesDiv = document.getElementById("opciones");
   opcionesDiv.innerHTML = "";
-
   preguntaActual.opciones.forEach(opcion => {
     const btn = document.createElement("button");
     btn.textContent = opcion;
     btn.addEventListener("click", () => seleccionarOpcion(opcion, btn));
     opcionesDiv.appendChild(btn);
   });
-
-  // Temporizador
   clearInterval(temporizador);
   tiempo = 60;
   document.getElementById("tiempo").textContent = tiempo;
@@ -82,109 +114,181 @@ function mostrarPregunta(indice) {
     document.getElementById("tiempo").textContent = tiempo;
     if (tiempo <= 0) {
       clearInterval(temporizador);
-      seleccionarOpcion(null); // Se acaba el tiempo, cuenta como error
+      seleccionarOpcion(null); 
     }
   }, 1000);
 }
 
 function seleccionarOpcion(opcion, boton = null) {
+  // (Esta función no cambia)
   clearInterval(temporizador);
   const correcta = preguntasSeleccionadas[indicePregunta].correcta;
-
   const botones = document.querySelectorAll("#opciones button");
   botones.forEach(b => {
-    b.disabled = true; // Deshabilitar botones después de elegir
-    if (b.textContent === correcta) b.style.backgroundColor = "green"; // Correcto
-    else if (b === boton) b.style.backgroundColor = "red"; // Equivocada
+    b.disabled = true; 
+    if (b.textContent === correcta) b.classList.add("correcta"); 
+    else if (b === boton) b.classList.add("incorrecta"); 
   });
-
-  // Contar aciertos y errores
   if (opcion === correcta) aciertos++;
   else errores++;
-
-  // Esperar 1.2 segundos para mostrar siguente pregunta
   setTimeout(() => {
     indicePregunta++;
     mostrarPregunta(indicePregunta);
   }, 1200);
 }
 
+// (Esta función envía el puntaje - POST)
 function finalizarJuego() {
   document.getElementById("pantalla-juego").style.display = "none";
   const pantallaFinal = document.getElementById("pantalla-final");
   pantallaFinal.style.display = "block";
+  pantallaFinal.innerHTML = `<h1>Guardando tu puntaje...</h1>`;
 
   let total = aciertos + errores;
-  // Evitar división por cero si el juego termina sin preguntas
   let porcentaje = total > 0 ? Math.round((aciertos / total) * 100) : 0;
 
-  // Guardar puntaje en ranking (con nombre)
-  puntajes.push({ nombre: nombreJugadorActual, aciertos, errores, porcentaje });
-  
-  // Ordenar el ranking por porcentaje (de mayor a menor)
-  puntajes.sort((a, b) => b.porcentaje - a.porcentaje);
-  
-  // Guardar el ranking actualizado en localStorage
-  localStorage.setItem("rankingTrivia", JSON.stringify(puntajes));
+  const datosDelJuego = {
+    nombre: nombreJugadorActual,
+    aciertos: aciertos,
+    porcentaje: porcentaje,
+    codigo: dniActual // <--- Envía el DNI bajo el nombre "codigo"
+  };
 
-  pantallaFinal.innerHTML = `
-    <h1>¡Juego terminado, ${nombreJugadorActual}!</h1>
-    <p>Respuestas correctas: ${aciertos}</p>
-    <p>Respuestas incorrectas: ${errores}</p>
-    <p>Porcentaje de aciertos: ${porcentaje}%</p>
-    <h3>Ranking Histórico:</h3>
-    <ul id="lista-ranking-final">
-      ${puntajes.map(p => `<li>${p.nombre}: ${p.aciertos} correctas - ${p.porcentaje}%</li>`).join('')}
-    </ul>
-    <button onclick="reiniciarJuego()">Volver a jugar</button>
-  `;
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'cors', 
+    cache: 'no-cache',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datosDelJuego), 
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.status === 'success') {
+      pantallaFinal.innerHTML = `
+        <h1>¡Juego terminado, ${nombreJugadorActual}!</h1>
+        <p>Tu puntaje fue enviado con éxito.</p>
+        <p>Respuestas correctas: ${aciertos}</p>
+        <p>Porcentaje de aciertos: ${porcentaje}%</p>
+        <p>¡Mucha suerte en el sorteo!</p>
+        <button id="boton-reiniciar">Volver al inicio</button>
+      `;
+    } else {
+      throw new Error(data.message || 'Error desconocido al guardar.');
+    }
+    document.getElementById("boton-reiniciar").addEventListener("click", reiniciarJuego);
+  })
+  .catch(error => {
+    console.error('Error al enviar puntaje:', error);
+    pantallaFinal.innerHTML = `
+      <h1>¡Ups! Hubo un error de conexión</h1>
+      <p>No pudimos guardar tu puntaje. Revisa tu conexión e inténtalo de nuevo.</p>
+      <button id="boton-reiniciar">Volver al inicio</button>
+    `;
+    document.getElementById("boton-reiniciar").addEventListener("click", reiniciarJuego);
+  });
 }
 
 function reiniciarJuego() {
-  // No reseteamos 'puntajes' para que el ranking persista
   aciertos = 0;
   errores = 0;
   indicePregunta = 0;
   document.getElementById("pantalla-final").style.display = "none";
   document.getElementById("pantalla-dificultad").style.display = "block";
+  
+  // Limpia los campos
+  document.getElementById("nombre-jugador").value = "";
+  document.getElementById("documento-jugador").value = "";
+  
+  // Actualiza el ranking
+  mostrarRankingInicio();
 }
 
-// --- FUNCIÓN AÑADIDA ---
 function volverAlMenu() {
-  // Parar el temporizador actual
   clearInterval(temporizador);
-  
-  // Ocultar pantalla de juego y mostrar la de dificultad
   document.getElementById("pantalla-juego").style.display = "none";
   document.getElementById("pantalla-dificultad").style.display = "block";
-  
-  // Limpiar el nombre del jugador para que pueda ingresar uno nuevo
   document.getElementById("nombre-jugador").value = ""; 
+  document.getElementById("documento-jugador").value = "";
+  mostrarRankingInicio();
 }
 
 
-// --- FUNCIONES DE NAVEGACIÓN (Existentes) ---
+// --- FUNCIONES DE NAVEGACIÓN (PIDEN DATOS A GOOGLE) ---
 
+// (Esta pide los datos para el ranking completo)
 function mostrarRanking() {
   document.getElementById("pantalla-dificultad").style.display = "none";
   document.getElementById("pantalla-ranking").style.display = "block";
 
-  // Cargar puntajes (por si acaso se actualizó en otra pestaña)
-  let puntajesGuardados = JSON.parse(localStorage.getItem("rankingTrivia")) || [];
-  puntajesGuardados.sort((a, b) => b.porcentaje - a.porcentaje);
-
   const listaRanking = document.getElementById("lista-ranking");
-  
-  if (puntajesGuardados.length === 0) {
-    listaRanking.innerHTML = "<li>Aún no hay puntajes guardados.</li>";
-  } else {
-    listaRanking.innerHTML = puntajesGuardados.map(p => 
-      `<li>${p.nombre}: ${p.aciertos} correctas - ${p.porcentaje}%</li>`
-    ).join('');
-  }
+  listaRanking.innerHTML = "<li>Cargando ranking...</li>";
+
+  // Hacemos un GET a la misma URL
+  fetch(GOOGLE_SCRIPT_URL)
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === 'success' && result.data.length > 0) {
+        var topPuntajes = result.data; // Ya viene filtrado
+        
+        listaRanking.innerHTML = topPuntajes.map(p => {
+            let porcentaje = Math.round((p.aciertos / 20) * 100); 
+            return `<li>${p.nombre}: ${p.aciertos} correctas - ${porcentaje}%</li>`;
+          }).join('');
+          
+      } else if (result.data.length === 0) {
+        listaRanking.innerHTML = "<li>Aún no hay puntajes.</li>";
+      } else {
+        throw new Error(result.message || 'Error al cargar ranking');
+      }
+    })
+    .catch(error => {
+      console.error("Error al cargar ranking:", error);
+      listaRanking.innerHTML = `<li>Error al cargar ranking.</li>`;
+    });
 }
 
 function mostrarDificultad() {
   document.getElementById("pantalla-ranking").style.display = "none";
   document.getElementById("pantalla-dificultad").style.display = "block";
+  mostrarRankingInicio();
+}
+
+// (Esta pide los datos para el ranking de la página de inicio)
+function mostrarRankingInicio() {
+  const listaRanking = document.getElementById("lista-ranking-inicio");
+  listaRanking.innerHTML = "<li>Cargando ranking...</li>";
+  
+  // Hacemos un GET a la misma URL
+  fetch(GOOGLE_SCRIPT_URL)
+    .then(response => response.json())
+    .then(result => {
+      if (result.status === 'success' && result.data.length > 0) {
+        var topPuntajes = result.data; // Ya viene el Top 5 filtrado
+        
+        listaRanking.innerHTML = topPuntajes.map(p => {
+          let porcentaje = Math.round((p.aciertos / 20) * 100); 
+          
+          return `
+            <li>
+              <strong>${p.nombre}</strong>
+              <small>${p.aciertos} aciertos</small>
+              <div class="barra-progreso">
+                <div class="barra-progreso-fill" style="width: ${porcentaje}%;">
+                  ${porcentaje}%
+                </div>
+              </div>
+            </li>
+          `;
+        }).join('');
+        
+      } else if (result.data.length === 0) {
+        listaRanking.innerHTML = "<li>Aún no hay puntajes. ¡Sé el primero!</li>";
+      } else {
+        throw new Error(result.message || 'Error al cargar ranking');
+      }
+    })
+    .catch(error => {
+      console.error("Error al cargar ranking:", error);
+      listaRanking.innerHTML = `<li>Error al cargar ranking.</li>`;
+    });
 }
