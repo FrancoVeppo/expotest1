@@ -25,13 +25,14 @@ body {
   padding: 40px 20px;
   position: relative;
   min-height: 100vh; /* Ocupa toda la altura */
-  display: flex; 
+  display: flex;
   flex-direction: column;
   justify-content: center; /* Centra verticalmente por defecto */
   box-sizing: border-box;
 }
 
 /* Ocultar pantallas que no se usan */
+#pantalla-categorias[style*="display:none"], /* Añadido */
 #pantalla-juego[style*="display:none"],
 #pantalla-final[style*="display:none"],
 #pantalla-ranking[style*="display:none"] {
@@ -119,21 +120,21 @@ button:active {
 
 /* --- RANKING LATERAL (Con ranking en la esquina) --- */
 .inicio-ranking {
-  position: absolute; 
+  position: absolute;
   top: 60px; /* Misma distancia que el padding-top de la pantalla */
   right: 60px; /* Lo pega a la esquina derecha */
   width: 400px; /* Ancho fijo */
-  
+
   padding: 25px;
   border-radius: var(--radio-borde);
   background: var(--color-tarjeta);
   box-shadow: 0 8px 30px var(--color-sombra);
   text-align: left;
-  
+
   display: flex;
   flex-direction: column;
-  max-height: 80vh; 
-  overflow-y: hidden; 
+  max-height: 80vh;
+  overflow-y: hidden;
 }
 
 .inicio-ranking h2 {
@@ -199,6 +200,7 @@ button:active {
   box-sizing: border-box;
   transition: width 0.5s ease;
 }
+
 /* --- ESTILOS TOP 3 (Medallas y Oro) --- */
 @keyframes gold-glow {
   0% {
@@ -227,15 +229,13 @@ button:active {
 
 #lista-ranking-inicio li:nth-child(1) .barra-progreso-fill {
   background: #ffd700; /* Color oro sólido */
-  background-image: none; 
+  background-image: none;
 }
 
 #lista-ranking-inicio li:nth-child(1) .barra-progreso {
   animation: gold-glow 2s infinite ease-in-out;
-  border-radius: 10px; 
+  border-radius: 10px;
 }
-
-
 /* --- PANTALLA JUEGO (Estilo "Preguntados") --- */
 #pantalla-juego {
   max-width: 500px; /* Más angosto, como en la app */
@@ -275,7 +275,7 @@ button:active {
   position: relative; /* Para la "categoría" */
   background: var(--color-tarjeta);
   color: var(--color-texto);
-  font-size: 1.8em; 
+  font-size: 1.8em;
   font-weight: 600;
   padding: 50px 20px 30px 20px; /* Padding: Arriba (para categoría), Lados, Abajo */
   border-radius: var(--radio-borde);
@@ -291,7 +291,7 @@ button:active {
   transform: translateX(-50%);
   background: var(--color-primario);
   color: white;
-  font-size: 0.7em; 
+  font-size: 0.7em;
   font-weight: 700;
   padding: 10px 40px;
   border-radius: 50px;
@@ -398,19 +398,109 @@ button:active {
   border-bottom-left-radius: var(--radio-borde);
   border-bottom-right-radius: var(--radio-borde);
 }
+/* --- ESTILOS PANTALLA CATEGORÍAS --- */
+#pantalla-categorias {
+  justify-content: center; /* Centrar verticalmente */
+}
 
+.categorias-main {
+  width: 100%;
+  max-width: 700px; /* Ancho del contenido */
+  background: var(--color-tarjeta);
+  padding: 30px 40px;
+  border-radius: var(--radio-borde);
+  box-shadow: 0 8px 30px var(--color-sombra);
+  margin: 0 auto; /* Centra el panel */
+}
 
-/* --- RESPONSIVE (Para celulares) --- */
+.categorias-main h1 {
+  font-size: 2.5em;
+  color: var(--color-primario);
+  margin-top: 0;
+}
+
+.categorias-main p {
+  font-size: 1.1em;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.categorias-botones {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Columnas responsivas */
+  gap: 15px; /* Espacio entre botones */
+  margin-bottom: 30px;
+}
+
+.btn-categoria {
+  padding: 18px 10px; /* Ajusta padding para botones más pequeños */
+  font-size: 16px; /* Letra un poco más chica */
+  width: 100%; /* Ocupa el ancho de la columna del grid */
+  max-width: none; /* Quita el max-width por defecto de los botones */
+  /* Colores base - se sobreescriben abajo */
+  background: var(--gradiente-btn);
+}
+
+/* Botón simple para volver */
+.boton-simple {
+  background: none;
+  color: var(--color-primario);
+  box-shadow: none;
+  font-weight: 600;
+  padding: 10px;
+  max-width: 200px;
+  margin-top: 10px;
+}
+.boton-simple:hover {
+  background: rgba(106, 17, 203, 0.1);
+  transform: none;
+  box-shadow: none;
+}
+
+/* --- ESTILOS COLORES CATEGORÍAS --- */
+.btn-categoria[data-categoria="cultura general"] {
+  background: linear-gradient(135deg, #FFD700, #FFA500); /* Dorado a Naranja */
+}
+.btn-categoria[data-categoria="historia"] {
+  background: linear-gradient(135deg, #D2B48C, #8B4513); /* Tan a Marrón */
+}
+.btn-categoria[data-categoria="matematica"] {
+  background: linear-gradient(135deg, #87CEEB, #1E90FF); /* Celeste a Azul */
+}
+.btn-categoria[data-categoria="informatica"] {
+  background: linear-gradient(135deg, #A9A9A9, #2F4F4F); /* Gris Oscuro a Gris Pizarra */
+}
+.btn-categoria[data-categoria="deportes"] {
+  background: linear-gradient(135deg, #90EE90, #2E8B57); /* Verde Claro a Verde Mar */
+}
+.btn-categoria[data-categoria="ciencia"] {
+  background: linear-gradient(135deg, #E6E6FA, #9370DB); /* Lavanda a Violeta Medio */
+}
+.btn-categoria[data-categoria="geografia"] {
+  background: linear-gradient(135deg, #F08080, #CD5C5C); /* Coral Claro a Rojo Indio */
+}
+.btn-categoria[data-categoria="aleatorio"] {
+  background: linear-gradient(135deg, #FF69B4, #C71585); /* Rosa Fuerte a Frambuesa */
+}
+
+/* Efecto hover para botones de categoría */
+.btn-categoria:hover {
+   filter: brightness(1.1); /* Aclara ligeramente el color al pasar el mouse */
+   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15); /* Mantenemos la sombra del hover */
+   transform: translateY(-3px); /* Mantenemos el efecto de elevación */
+}
+
+/* --- RESPONSIVE --- */
 @media (max-width: 950px) {
   .pantalla {
     padding: 20px;
     min-height: 100vh;
   }
-  
+
   #pantalla-dificultad {
     padding-top: 30px;
   }
-  
+
   .inicio-main {
     width: 100%;
     max-width: 500px;
@@ -418,19 +508,25 @@ button:active {
     box-sizing: border-box;
     margin: 0 auto;
   }
-  
+
   .inicio-main h1 { font-size: 2em; }
-  
+
   .inicio-ranking {
     position: static; /* <-- CLAVE: En móvil deja de ser absoluto */
     width: 100%;
     max-width: 500px;
     margin: 30px auto 0; /* Se centra debajo del main */
     box-sizing: border-box;
-    max-height: 400px; 
+    max-height: 400px;
     right: auto; /* Resetea la posición */
     top: auto; /* Resetea la posición */
   }
+
+  /* Responsive para categorías */
+  .categorias-main {
+      padding: 20px;
+  }
+   .categorias-main h1 { font-size: 2em; }
 
   button, #opciones button {
     width: 100%;
@@ -440,8 +536,14 @@ button:active {
   #temporizador { font-size: 1.2em; top: 15px; left: 15px; }
   .boton-esquina { top: 15px; right: 15px; }
 }
-/* --- Animaciones de Transición de Pregunta --- */
 
+@media (max-width: 500px) {
+  .categorias-botones {
+    grid-template-columns: 1fr; /* Una columna en móviles muy pequeños */
+  }
+}
+
+/* --- Animaciones de Transición de Pregunta --- */
 @keyframes fadeOut {
   from {
     opacity: 1;
@@ -462,4 +564,84 @@ button:active {
     opacity: 1;
     transform: translateY(0);
   }
+}
+/* --- ESTILOS MODAL DE CONFIRMACIÓN --- */
+
+.modal-overlay {
+  position: fixed; /* Cubre toda la pantalla */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Fondo semitransparente */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Asegura que esté por encima de todo */
+  opacity: 0; /* Empieza oculto */
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-contenido {
+  background-color: var(--color-tarjeta);
+  padding: 30px 40px;
+  border-radius: var(--radio-borde);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  max-width: 450px;
+  width: 90%;
+  transform: scale(0.9); /* Efecto de aparición */
+  transition: transform 0.3s ease;
+}
+
+.modal-overlay.visible .modal-contenido {
+   transform: scale(1);
+}
+
+.modal-contenido h2 {
+  color: var(--color-primario);
+  margin-top: 0;
+  font-size: 1.8em;
+}
+
+.modal-contenido p {
+  color: var(--color-texto);
+  font-size: 1.1em;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+
+.modal-botones {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Ajustes para botones dentro del modal */
+.modal-botones button {
+  width: 100%; /* Ocupan todo el ancho */
+  max-width: none;
+  font-size: 16px;
+}
+
+#modal-btn-aceptar {
+   background: var(--gradiente-btn); /* Color principal */
+}
+
+#modal-btn-cancelar {
+   background: none;
+   color: #888; /* Un gris para que sea menos prominente */
+   box-shadow: none;
+}
+#modal-btn-cancelar:hover {
+    background: #f0f0f0;
+    transform: none;
+    box-shadow: none;
 }
