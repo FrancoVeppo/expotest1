@@ -1,1 +1,48 @@
 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Juego de Bloques 3D</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="css/juegodebloques.css?version=123">
+</head>
+<body>
+
+    <div class="main-wrapper">
+        
+        <div id="container">
+            <div id="game"></div>
+            <div id="score">0</div>
+            <div id="instructions">Haz clic (o barra espaciadora) para soltar el bloque</div>
+            <div class="game-over">
+                <h2>Fin del Juego</h2>
+                <p>¡Lo hiciste genial!</p>
+                <p>Haz clic o presiona espacio para empezar de nuevo</p>
+            </div>
+            <div class="game-ready">
+                
+                <label for="username-input" id="username-label">Escribe tu nombre:</label>
+                <input type="text" id="username-input" maxlength="15" placeholder="Anónimo">
+                
+                <div id="start-button">Empezar</div>
+                <div></div>
+            </div>
+        </div>
+
+        <div id="ranking-container">
+            <h2>Mejores Puntajes</h2>
+            <ol id="ranking-list">
+                </ol>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenLite.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/plugins/CSSPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/easing/EasePack.min.js"></script>
+    
+<script src="js/juegodebloques.js?version=123"></script>
+</body>
+</html>
