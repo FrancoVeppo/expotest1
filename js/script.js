@@ -229,7 +229,7 @@ function mostrarPregunta(indice) {
   });
 
   clearInterval(temporizador);
-  tiempo = 10; // <-- Tiempo ajustado a 10 segundos
+  tiempo = 60; // <-- Tiempo ajustado a 10 segundos
   document.getElementById("tiempo").textContent = tiempo;
   temporizador = setInterval(() => {
     tiempo--;
@@ -448,4 +448,5 @@ function mostrarRankingInicio() {
       listaRanking.innerHTML = `<li>Error al cargar ranking.</li>`;
     });
 }
+
 
