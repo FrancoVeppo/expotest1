@@ -4,24 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trivia</title>
-  <link rel="stylesheet" href="css/trivia.css"> 
+  <link rel="stylesheet" href="css/trivia.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 </head>
 <body>
-  
+
   <div id="pantalla-dificultad" class="pantalla">
-      
+
     <div class="inicio-main">
       <h1>Elige la dificultad</h1>
       <input type="text" id="nombre-jugador" placeholder="Ingresa tu nombre">
-      
+
       <input type="text" id="documento-jugador" placeholder="Ingresa tu DNI (sin puntos)">
-      
+
       <button id="facil">Fácil (5 preguntas)</button>
       <button id="medio">Medio (10 preguntas)</button>
-      <button id="dificil">Difícil (20 preguntas)</button>
+      <button id="dificil">Difícil (30 preguntas)</button>
       <button id="ver-ranking">Ver Ranking Completo</button>
     </div>
-    
+
     <div class="inicio-ranking">
       <h2>Mejores Puntajes</h2>
       <ul id="lista-ranking-inicio">
@@ -29,10 +31,30 @@
     </div>
   </div>
 
+  <div id="pantalla-categorias" class="pantalla" style="display:none;">
+    <div class="categorias-main">
+      <h1>Elige una Categoría (Difícil)</h1>
+      <p>Has elegido la dificultad Difícil. Ahora, selecciona la categoría para tus 20 preguntas.</p>
+
+      <div class="categorias-botones">
+        <button class="btn-categoria" data-categoria="cultura general">🏛️ Cultura General</button>
+        <button class="btn-categoria" data-categoria="historia">📜 Historia</button>
+        <button class="btn-categoria" data-categoria="matematica">🧮 Matemática</button>
+        <button class="btn-categoria" data-categoria="informatica">💻 Informática</button>
+        <button class="btn-categoria" data-categoria="deportes">⚽ Deportes</button>
+        <button class="btn-categoria" data-categoria="ciencia">🔬 Ciencia</button>
+        <button class="btn-categoria" data-categoria="geografia">🌍 Geografía</button>
+        <button class="btn-categoria" data-categoria="aleatorio">🎲 Aleatorio</button>
+      </div>
+
+      <button id="boton-volver-dificultad" class="boton-simple">Volver a Dificultad</button>
+    </div>
+  </div>
+
   <div id="pantalla-juego" class="pantalla" style="display:none;">
     <div id="temporizador">Tiempo: <span id="tiempo">60</span>s</div>
     <button id="boton-volver-menu" class="boton-esquina">Volver al Menú</button>
-    
+
     <h2 id="pregunta"></h2>
     <div id="opciones"></div>
   </div>
@@ -46,10 +68,8 @@
       </ul>
     <button id="boton-volver-ranking">Volver</button>
   </div>
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-</head>
+
   <script src="js/preguntas.js"></script>
   <script src="js/script.js"></script>
 </body>
 </html>
-
