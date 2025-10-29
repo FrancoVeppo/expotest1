@@ -34,7 +34,7 @@
   <div id="pantalla-categorias" class="pantalla" style="display:none;">
     <div class="categorias-main">
       <h1>Elige una Categoría (Difícil)</h1>
-      <p>Has elegido la dificultad Difícil. Ahora, selecciona la categoría para tus 20 preguntas.</p>
+      <p>Has elegido la dificultad Difícil. Ahora, selecciona la categoría para tus 30 preguntas.</p>
 
       <div class="categorias-botones">
         <button class="btn-categoria" data-categoria="cultura general">🏛️ Cultura General</button>
@@ -52,7 +52,7 @@
   </div>
 
   <div id="pantalla-juego" class="pantalla" style="display:none;">
-    <div id="temporizador">Tiempo: <span id="tiempo">60</span>s</div>
+    <div id="temporizador">Tiempo: <span id="tiempo">10</span>s</div>
     <button id="boton-volver-menu" class="boton-esquina">Volver al Menú</button>
 
     <h2 id="pregunta"></h2>
@@ -69,6 +69,17 @@
     <button id="boton-volver-ranking">Volver</button>
   </div>
 
+  <div id="modal-confirmacion" class="modal-overlay" style="display: none;">
+    <div class="modal-contenido">
+      <h2>⚠️ ADVERTENCIA ⚠️</h2>
+      <p>Para participar por los premios solo tienes <strong>UNA</strong> oportunidad.</p>
+      <p>¿Estás seguro/a de continuar?</p>
+      <div class="modal-botones">
+        <button id="modal-btn-aceptar">Aceptar y Jugar</button>
+        <button id="modal-btn-cancelar" class="boton-simple">Volver al Menú</button>
+      </div>
+    </div>
+  </div>
   <script src="js/preguntas.js"></script>
   <script src="js/script.js"></script>
 </body>
