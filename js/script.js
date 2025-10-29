@@ -1,7 +1,7 @@
 // (VARIABLES GLOBALES)
 let preguntasSeleccionadas = [];
 let indicePregunta = 0;
-let tiempo = 60;
+let tiempo = 10; // <-- Tiempo ajustado a 10 segundos
 let temporizador;
 let aciertos = 0;
 let errores = 0;
@@ -19,6 +19,10 @@ const pantallaJuego = document.getElementById("pantalla-juego");
 const pantallaFinal = document.getElementById("pantalla-final");
 const pantallaRanking = document.getElementById("pantalla-ranking");
 
+// --- REFERENCIAS AL MODAL --- (Nuevo)
+const modalConfirmacion = document.getElementById("modal-confirmacion");
+const modalBtnAceptar = document.getElementById("modal-btn-aceptar");
+const modalBtnCancelar = document.getElementById("modal-btn-cancelar");
 
 // --- EVENT LISTENERS ---
 document.getElementById("facil").addEventListener("click", () => preIniciarJuego(5, "Fácil"));
@@ -33,8 +37,7 @@ document.getElementById("boton-volver-dificultad").addEventListener("click", vol
 document.querySelectorAll('.btn-categoria').forEach(button => {
   button.addEventListener('click', (event) => {
     const categoriaSeleccionada = event.target.getAttribute('data-categoria');
-    // --- ¡¡CAMBIO AQUÍ!! --- Pide 30 preguntas para Difícil
-    preIniciarJuego(30, "Difícil", categoriaSeleccionada);
+    preIniciarJuego(30, "Difícil", categoriaSeleccionada); // Pide 30 preguntas para Difícil
   });
 });
 
@@ -82,12 +85,11 @@ function mostrarCategorias() {
   pantallaCategorias.style.display = "block"; // Debería ser flex o grid según tu CSS
 }
 
-// --- FUNCIÓN MODIFICADA: Verifica DNI y luego decide si iniciar o mostrar error ---
+// --- FUNCIÓN MODIFICADA: Verifica DNI y luego USA EL MODAL para Difícil ---
 function verificarDNIYContinuar(cantidad, nombreDificultad, categoria = null) {
   const botonesDificultad = document.querySelectorAll("#pantalla-dificultad button, #pantalla-categorias button");
   botonesDificultad.forEach(btn => btn.disabled = true);
 
-  // Mostrar feedback visual (opcional)
   let h1Dificultad = pantallaDificultad.querySelector("h1");
   let h1Categorias = pantallaCategorias.querySelector("h1");
   if (h1Dificultad) h1Dificultad.textContent = "Verificando DNI...";
@@ -102,10 +104,50 @@ function verificarDNIYContinuar(cantidad, nombreDificultad, categoria = null) {
 
       if (data.status === "usado") {
         alert("Este DNI ya fue utilizado. Solo se permite un intento por persona.");
-        volverADificultad(); // Vuelve a la pantalla inicial si el DNI está usado
+        volverADificultad();
+
       } else if (data.status === "no_usado") {
         // --- DNI VÁLIDO ---
-        iniciarJuego(cantidad, nombreDificultad, categoria); // Llama a la función que REALMENTE inicia
+
+        if (nombreDificultad === "Difícil") {
+          // --- Muestra el Modal Personalizado ---
+          modalConfirmacion.style.display = 'flex'; // Cambiamos display
+          // Pequeño delay para que la transición CSS funcione
+          setTimeout(() => {
+              modalConfirmacion.classList.add('visible');
+          }, 10);
+
+          // Removemos listeners anteriores por si acaso para evitar duplicados
+          modalBtnAceptar.replaceWith(modalBtnAceptar.cloneNode(true));
+          modalBtnCancelar.replaceWith(modalBtnCancelar.cloneNode(true));
+          // Re-obtenemos referencias a los botones clonados
+          const nuevoModalBtnAceptar = document.getElementById("modal-btn-aceptar");
+          const nuevoModalBtnCancelar = document.getElementById("modal-btn-cancelar");
+
+
+          // Añadimos listener al botón ACEPTAR del modal
+          nuevoModalBtnAceptar.addEventListener('click', () => {
+            modalConfirmacion.classList.remove('visible');
+            setTimeout(() => {
+                modalConfirmacion.style.display = 'none'; // Oculta después de la transición
+                iniciarJuego(cantidad, nombreDificultad, categoria); // Inicia el juego
+            }, 300); // Espera que termine la animación (igual a la duración en CSS)
+          });
+
+          // Añadimos listener al botón CANCELAR del modal
+          nuevoModalBtnCancelar.addEventListener('click', () => {
+            modalConfirmacion.classList.remove('visible');
+             setTimeout(() => {
+                modalConfirmacion.style.display = 'none'; // Oculta después de la transición
+                volverADificultad(); // Vuelve al menú
+             }, 300); // Espera que termine la animación
+          });
+
+        } else {
+          // Si NO es Difícil, inicia el juego directamente
+          iniciarJuego(cantidad, nombreDificultad, categoria);
+        }
+
       } else {
         throw new Error(data.message || "Error desconocido al verificar el DNI.");
       }
@@ -144,7 +186,6 @@ function iniciarJuego(cantidad, nombreDificultad, categoria = null) {
 
   // Asegurarse de que tenemos suficientes preguntas
   if(preguntasSeleccionadas.length < cantidad) {
-      // Mostramos una advertencia MÁS específica
       alert(`Advertencia: Solo se encontraron ${preguntasSeleccionadas.length} preguntas para esta selección (se necesitan ${cantidad}). Asegúrate de tener suficientes en js/preguntas.js`);
       cantidad = preguntasSeleccionadas.length; // Ajusta la cantidad si no hay suficientes
       if (cantidad === 0) {
@@ -168,7 +209,6 @@ function iniciarJuego(cantidad, nombreDificultad, categoria = null) {
 
 
 function mostrarPregunta(indice) {
-  // --- Esta función no cambia internamente ---
   if (indice >= preguntasSeleccionadas.length) {
     finalizarJuego();
     return;
@@ -189,7 +229,7 @@ function mostrarPregunta(indice) {
   });
 
   clearInterval(temporizador);
-  tiempo = 10;
+  tiempo = 10; // <-- Tiempo ajustado a 10 segundos
   document.getElementById("tiempo").textContent = tiempo;
   temporizador = setInterval(() => {
     tiempo--;
@@ -205,7 +245,6 @@ function mostrarPregunta(indice) {
 }
 
 function seleccionarOpcion(opcion, boton = null) {
-  // --- Esta función no cambia internamente ---
   clearInterval(temporizador);
   const correcta = preguntasSeleccionadas[indicePregunta].correcta;
   const botones = document.querySelectorAll("#opciones button");
@@ -243,7 +282,6 @@ function seleccionarOpcion(opcion, boton = null) {
 }
 
 function finalizarJuego() {
-  // --- Esta función no cambia internamente ---
   pantallaJuego.style.display = "none";
   pantallaFinal.style.display = "block";
   pantallaFinal.innerHTML = `<h1>Guardando tu puntaje...</h1>`;
@@ -368,7 +406,6 @@ function mostrarRanking() {
 
 
 function mostrarRankingInicio() {
-  // --- Esta función no cambia internamente ---
   const listaRanking = document.getElementById("lista-ranking-inicio");
   listaRanking.innerHTML = "<li>Cargando ranking...</li>";
 
