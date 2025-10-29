@@ -1,1 +1,313 @@
 
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+
+:root {
+    --color-dark: #303038;
+    --bg-color-game: #e0e0e0;
+}
+
+html, body {
+    margin: 0;
+    overflow: hidden; /* Evita barras de scroll innecesarias */
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    font-family: 'Comfortaa', cursive;
+    /* Evita que el usuario haga zoom accidentalmente en móviles */
+    touch-action: manipulation;
+}
+
+/* Layout principal para pantallas grandes (por defecto) */
+.main-wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#container {
+    flex-grow: 1;
+    height: 100%;
+    position: relative;
+    perspective: 1000px;
+    /* Importante para que el canvas 3D no se desborde */
+    overflow: hidden;
+}
+
+#ranking-container {
+    width: 280px;
+    flex-shrink: 0;
+    background: #f4f4f4;
+    border-left: 3px solid #ddd;
+    padding: 20px;
+    box-sizing: border-box;
+    font-family: 'Comfortaa', cursive;
+    color: var(--color-dark);
+    overflow-y: auto;
+}
+
+#ranking-container h2 {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+#ranking-list {
+    list-style-type: decimal;
+    padding-left: 30px;
+    margin: 0;
+}
+
+#ranking-list li {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+/* --- Estilos del juego --- */
+#container #score {
+    position: absolute;
+    top: 15px; /* Un poco más arriba */
+    width: 100%;
+    text-align: center;
+    font-size: 8vh; /* Más pequeño para móviles */
+    transition: transform 0.5s ease;
+    color: var(--color-dark);
+    transform: translatey(-200px) scale(1);
+    z-index: 10;
+    pointer-events: none; /* Evita que tape clics */
+}
+
+#container #game {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#container .game-over {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Ocupa toda la pantalla */
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px; /* Espacio por si el texto es largo */
+    box-sizing: border-box;
+    text-align: center;
+    z-index: 20;
+    background: rgba(255, 255, 255, 0.6); /* Un poco más opaco */
+    backdrop-filter: blur(5px);
+}
+
+#container .game-over * {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translatey(-50px);
+    color: var(--color-dark);
+}
+
+#container .game-over h2 {
+    margin: 0 0 10px 0;
+    padding: 0;
+    font-size: clamp(2rem, 8vw, 2.5rem); /* Tamaño adaptable */
+}
+#container .game-over p {
+     font-size: clamp(1rem, 4vw, 1.2rem); /* Tamaño adaptable */
+     margin-bottom: 20px;
+}
+
+#container .game-ready {
+    position: absolute;
+    top: 25%;
+    left: 0;
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 20;
+    padding: 0 15px; /* Espacio lateral en móviles */
+    box-sizing: border-box;
+}
+
+#username-label {
+    font-size: clamp(1rem, 5vw, 1.2rem); /* Tamaño adaptable */
+    color: var(--color-dark);
+    font-weight: bold;
+    transform: translatey(-50px);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    margin-bottom: 15px;
+}
+
+#username-input {
+    font-family: 'Comfortaa', cursive;
+    font-size: clamp(1.2rem, 6vw, 1.5rem); /* Tamaño adaptable */
+    text-align: center;
+    color: var(--color-dark);
+    border: 3px solid var(--color-dark);
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 80%; /* Más flexible */
+    max-width: 300px; /* Límite */
+    background: transparent;
+    transform: translatey(-50px);
+    opacity: 0;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    margin-bottom: 25px;
+}
+
+#username-input::placeholder {
+    color: #303038a8;
+}
+
+#container .game-ready #start-button {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: translatey(-50px);
+    border: 3px solid var(--color-dark);
+    padding: 10px 20px;
+    background-color: transparent;
+    color: var(--color-dark);
+    font-size: clamp(1.2rem, 6vw, 1.5rem); /* Tamaño adaptable */
+    cursor: pointer;
+    border-radius: 5px; /* Añadido */
+}
+
+#container #instructions {
+    position: absolute;
+    width: 90%; /* Evita que se pegue a los bordes */
+    left: 5%; /* Centrado */
+    bottom: 10px; /* Más abajo para no estorbar */
+    text-align: center;
+    font-size: clamp(0.8rem, 3vw, 1rem); /* Tamaño adaptable */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    z-index: 10;
+    pointer-events: none; /* Evita que tape clics */
+}
+
+#container #instructions.hide {
+    opacity: 0 !important;
+}
+
+#container.playing #score,
+#container.resetting #score {
+    transform: translatey(0px) scale(1);
+}
+
+#container.playing #instructions {
+    opacity: 1;
+}
+
+#container.ready .game-ready {
+    display: flex;
+}
+
+#container.ready .game-ready #start-button,
+#container.ready .game-ready #username-label,
+#container.ready .game-ready #username-input {
+    opacity: 1;
+    transform: translatey(0);
+}
+
+#container.ended #score {
+    transform: translatey(6vh) scale(1.5);
+}
+
+#container.ended .game-over {
+    display: flex;
+}
+
+#container.ended .game-over * {
+    opacity: 1;
+    transform: translatey(0);
+}
+
+#container.ended .game-over p {
+    transition-delay: 0.3s;
+}
+
+
+/* ------------------------------------------- */
+/* --- ESTILOS RESPONSIVOS PARA MÓVILES --- */
+/* ------------------------------------------- */
+
+/* Se aplican cuando el ancho de la pantalla es 768px o menos */
+@media (max-width: 768px) {
+
+    /* Cambiamos la dirección del wrapper principal a columna */
+    .main-wrapper {
+        flex-direction: column;
+    }
+
+    /* El contenedor del juego ahora ocupa la mayor parte de la altura */
+    #container {
+        flex-grow: 1; /* Ocupa el espacio disponible */
+        height: 70%;  /* Por ejemplo, 70% de la altura */
+        min-height: 300px; /* Altura mínima para jugar */
+    }
+
+    /* El ranking ocupa el resto de la altura y pierde el borde izquierdo */
+    #ranking-container {
+        width: 100%; /* Ancho completo */
+        height: 30%; /* El 30% restante de altura */
+        flex-grow: 1; /* Ocupa espacio si #container no llega al 70% */
+        border-left: none; /* Quitamos borde */
+        border-top: 3px solid #ddd; /* Ponemos borde arriba */
+        padding: 15px; /* Menos padding */
+        min-height: 150px; /* Altura mínima */
+    }
+
+    #ranking-container h2 {
+        font-size: 1.3rem; /* Título más pequeño */
+        margin-bottom: 10px;
+    }
+
+    #ranking-list li {
+        font-size: 1rem; /* Texto más pequeño */
+        margin-bottom: 8px;
+    }
+
+    /* Ajustamos el tamaño del puntaje en pantalla */
+    #container #score {
+        font-size: 12vw; /* Más grande en móviles */
+        top: 10px;
+    }
+
+    /* Subimos un poco el menú de inicio */
+    #container .game-ready {
+        top: 20%;
+    }
+
+     /* Instrucciones un poco más pequeñas */
+    #container #instructions {
+         bottom: 5px;
+    }
+}
+
+/* Ajustes adicionales para pantallas muy pequeñas (menos de 400px) */
+@media (max-width: 400px) {
+    #ranking-container {
+        padding: 10px;
+    }
+    #ranking-container h2 {
+        font-size: 1.1rem;
+    }
+    #ranking-list li {
+        font-size: 0.9rem;
+    }
+     #container .game-ready {
+        top: 15%; /* Aún más arriba */
+    }
+     #username-input {
+        width: 90%; /* Casi ancho completo */
+    }
+}
