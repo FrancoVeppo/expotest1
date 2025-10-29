@@ -564,7 +564,7 @@ const preguntasPorCategoria = {
     { pregunta: "¿Y qué significa 'ascender'?", opciones: ["Subir a una división superior por buenos resultados", "Perder la categoría", "Empatar muchos partidos", "Fichar un jugador extranjero"], correcta: "Subir a una división superior por buenos resultados" },
     { pregunta: "¿Cuál es el color predominante de la camiseta titular de San Lorenzo?", opciones: ["Rojo y Blanco", "Azul y Amarillo", "Blanco y Celeste", "Azul y Grana (Rojo)"], correcta: "Azul y Grana (Rojo)" },
     { pregunta: "¿Qué es la 'AFA'?", opciones: ["Asociación de Futbolistas Agremiados", "Agencia Federal de Árbitros", "Asociación del Fútbol Argentino", "Academia de Formación Atlética"], correcta: "Asociación del Fútbol Argentino" },
-    { pregunta: "¿Qué jugador argentino ganó 7 Balones de Oro?", opciones: ["Diego Maradona", "Alfredo Di Stéfano", "Lionel Messi", "Mario Kempes"], correcta: "Lionel Messi" },
+    { pregunta: "¿Qué jugador argentino ganó 8 Balones de Oro?", opciones: ["Diego Maradona", "Alfredo Di Stéfano", "Lionel Messi", "Mario Kempes"], correcta: "Lionel Messi" },
     { pregunta: "¿Qué importante torneo de selecciones ganó Argentina en 2021 en Brasil?", opciones: ["Mundial de Clubes", "Copa Libertadores", "Copa América", "Juegos Olímpicos"], correcta: "Copa América" },
     { pregunta: "¿Qué club argentino fue el primero en ganar la Copa Intercontinental?", opciones: ["Estudiantes de La Plata", "Racing Club", "Independiente", "Boca Juniors"], correcta: "Racing Club" }, // (1967)
     { pregunta: "¿Qué jugador es conocido como 'El Kun'?", opciones: ["Gonzalo Higuaín", "Carlos Tevez", "Sergio Agüero", "Ezequiel Lavezzi"], correcta: "Sergio Agüero" },
@@ -779,3 +779,4 @@ const preguntasPorCategoria = {
 // --- PREGUNTAS GLOBALES (para modos Fácil y Medio) ---
 // Se crea una lista única mezclando todas las preguntas de todas las categorías
 const preguntas = Object.values(preguntasPorCategoria).flat();
+
