@@ -1,7 +1,7 @@
 // (VARIABLES GLOBALES)
 let preguntasSeleccionadas = [];
 let indicePregunta = 0;
-let tiempo = 10; // <-- Tiempo ajustado a 10 segundos
+let tiempo = 60; // <-- Tiempo ajustado a 10 segundos
 let temporizador;
 let aciertos = 0;
 let errores = 0;
@@ -448,3 +448,4 @@ function mostrarRankingInicio() {
       listaRanking.innerHTML = `<li>Error al cargar ranking.</li>`;
     });
 }
+
